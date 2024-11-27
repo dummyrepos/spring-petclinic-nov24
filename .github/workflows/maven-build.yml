@@ -14,22 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '17' ]
+        java-version: [ '17', '21' ]
     steps:
       - name: Print Github Context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: "echo ${GITHUB_CONTEXT}"
       - uses: actions/checkout@v4
-      - name: Set up JDK ${{matrix.java}}
+      - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{matrix.java}}
+          java-version: ${{ matrix.java-version }}
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven Wrapper
-        run: ./mvnw -B verify
-        if: contains(github.event.head_commit.message, 'fix')
-      - name: execute maven packge
-        if: ${{ failure() }}
-        run: mvn clean package
+        run: ./mvnw package
+
