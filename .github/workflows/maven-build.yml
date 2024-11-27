@@ -16,8 +16,14 @@ jobs:
       matrix:
         java: [ '17' ]
     steps:
+      - name: Print Github Context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: "echo ${GITHUB_CONTEXT}"
       - uses: actions/checkout@v4
+        if: ${{ failure() }}
       - name: Set up JDK ${{matrix.java}}
+        if: ${{ failure() }}
         uses: actions/setup-java@v4
         with:
           java-version: ${{matrix.java}}
@@ -25,6 +31,7 @@ jobs:
           cache: maven
       - name: Build with Maven Wrapper
         run: ./mvnw -B verify
+        if: ${{ failure() }}
       - name: execute maven packge
-        if: ${{ success() }}
+        if: ${{ failure() }}
         run: mvn clean package
