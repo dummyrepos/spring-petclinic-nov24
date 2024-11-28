@@ -27,11 +27,13 @@ jobs:
                   ${{ secrets.DOCKER_USERNAME }}/spc-gcp:${{ github.sha }}
                   ${{ secrets.DOCKER_USERNAME }}/spc-gcp:latest
             - name: scan docker image
-              uses: aquasecurity/trivy-action@0.28.0
+              uses: snyk/actions/docker@master
               with:
-                image-ref: ${{ secrets.DOCKER_USERNAME }}/spc-gcp:${{ github.sha }}
-                format: table
-                ignore-unfixed: true
+                image: ${{ secrets.DOCKER_USERNAME }}/spc-gcp:${{ github.sha }}
+                args: --severity-threshold=high
+              env:
+                SNYK_TOKEN: ${{ secrets.SYNK_TOKEN }}
+            
             - name: publish Docker Image
               if: success()
               uses: docker/build-push-action@v6
