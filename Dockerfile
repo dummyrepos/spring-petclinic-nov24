@@ -11,7 +11,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime environment
-FROM openjdk:17-jre-slim AS runtime
+FROM amazoncorretto:17-alpine-jdk AS runtime
 WORKDIR /app
 
 # Copy the built JAR file from the build stage
